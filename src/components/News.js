@@ -16,8 +16,14 @@ class News extends Component {
     const apiKey = 'ddc7e442259b4830b263bc6fd50d16fe';
     const url = `https://newsapi.org/v2/top-headlines?country=in&category=${category}&apiKey=${apiKey}`;
 
+    const headers = new Headers({
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Upgrade': 'HTTP/1.1',
+    });
+
     try {
-      const response = await fetch(url);
+      const response = await fetch(url, { headers });
       const data = await response.json();
       this.setState({ articles: data.articles, loading: false });
     } catch (error) {
