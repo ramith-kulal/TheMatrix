@@ -1,0 +1,77 @@
+// News.js
+import React, { Component } from 'react';
+import NewsItem from './NewsItem';
+
+class News extends Component {
+  constructor() {
+    super();
+
+    this.state = {
+      articles: [],
+      loading: true,
+    };
+  }
+
+  async fetchData(category) {
+    const apiKey = 'ddc7e442259b4830b263bc6fd50d16fe';
+    const url = `https://newsapi.org/v2/top-headlines?country=in&category=${category}&apiKey=${apiKey}`;
+
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+      this.setState({ articles: data.articles, loading: false });
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      this.setState({ loading: false });
+    }
+  }
+
+  componentDidMount() {
+    const { category } = this.props;
+    this.fetchData(category);
+  }
+
+  componentDidUpdate(prevProps) {
+    const { category: newCategory, darkMode: newDarkMode } = this.props;
+    const { category: prevCategory, darkMode: prevDarkMode } = prevProps;
+
+    if (newCategory !== prevCategory || newDarkMode !== prevDarkMode) {
+      this.setState({ loading: true });
+      this.fetchData(newCategory);
+    }
+  }
+
+  render() {
+    const { loading, articles } = this.state;
+    const { category, darkMode } = this.props;
+
+    return (
+      <div className={`container my-3 ${darkMode ? 'dark' : 'light'}`}>
+        <h2>{category === 'general' ? 'The Matrix Top Headlines' : `Headlines on ${category}`}</h2>
+        {loading ? (
+          <p>Loading...</p>
+        ) : (
+          <div className="row justify-content-center">
+            {articles && articles.length > 0 ? (
+              articles.map((element) => (
+                <div className="col-md-4" key={element.url}>
+                  <NewsItem
+                    title={element.title ? element.title.slice(0, 44) : ''}
+                    description={element.description ? element.description.slice(0, 88) : ''}
+                    imgUrl={element.urlToImage}
+                    newsUrl={element.url}
+                    darkMode={darkMode}
+                  />
+                </div>
+              ))
+            ) : (
+              <p>No articles available.</p>
+            )}
+          </div>
+        )}
+      </div>
+    );
+  }
+}
+
+export default News;
