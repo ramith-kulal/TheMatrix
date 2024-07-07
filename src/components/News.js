@@ -11,10 +11,9 @@ class News extends Component {
       loading: true,
     };
   }
-
   async fetchData(category) {
-    const apiKey = 'ddc7e442259b4830b263bc6fd50d16fe';
-    const url = `https://newsapi.org/v2/top-headlines?country=in&category=${category}&apiKey=${apiKey}`;
+    const apiKey = 'BXXtksO801hCdXNr2XzdmCvYV5PAeAruqC8Lv7Hi';
+    const url = `https://api.thenewsapi.com/v1/news/headlines?locale=in&language=en&category=${category}&api_token=${apiKey}`;
 
     const headers = new Headers({
       'Accept': 'application/json',
